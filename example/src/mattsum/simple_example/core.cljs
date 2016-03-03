@@ -1,6 +1,5 @@
 (ns mattsum.simple-example.core
-  (:require [reagent.core :as reag :refer [atom]]
-            [cljs.test :as test]))
+  (:require [reagent.core :as r :refer [atom]]))
 
 #_(enable-console-print!)
 
@@ -9,35 +8,24 @@
 (set! js/React (js/require "react-native/Libraries/react-native/react-native.js"))
 (defonce react (js/require "react-native/Libraries/react-native/react-native.js"))
 
-(def view (reag/adapt-react-class (.-View react)))
-(def text (reag/adapt-react-class (.-Text react)))
+(def view (r/adapt-react-class (.-View react)))
+(def text (r/adapt-react-class (.-Text react)))
 
-(defn testf
-  []
-  (println "TESTING")
-  "RETURN TESTING")
-
-(defn root-view
-  []
+(defn root-view []
   [view
-   [text {:style {:margin-top 22, :margin-left 8}} "CHANGE THIS: HELLO WORLD"]])
+   [text {:style {:margin-top 22
+                  :margin-left 8
+                  :font-size 48
+                  :color "#00a"}}
+    "Hello World."]])
 
-(defn mount-root []
-  (reag/render [root-view] 1))
-
-(defn ^:export main
-  []
+(defn ^:export main []
   (enable-console-print!)
   (js/console.log "MAIN")
   (.registerComponent (.-AppRegistry react)
                       "SimpleExampleApp"
-                      #(reag/reactify-component root-view)))
+                      #(r/reactify-component root-view)))
 
-(test/deftest testingt
-  (test/is (= 1 2) "ERROR"))
-
-(defn on-js-reload
-  []
-  (test/run-tests)
+(defn on-js-reload []
   (js/console.log "JS RELOADING")
-  (mount-root))
+  (r/render [root-view] 1))
