@@ -11,20 +11,23 @@
 (def view (r/adapt-react-class (.-View react)))
 (def text (r/adapt-react-class (.-Text react)))
 
+(def x (atom 0))
+
 (defn root-view []
   [view
    [text {:style {:margin-top 22
                   :margin-left 8
                   :font-size 48
                   :color "#00a"}}
-    "Hello World."]])
+    "x=" @x]])
 
 (defn ^:export main []
   (enable-console-print!)
   (js/console.log "MAIN")
-  (.registerComponent (.-AppRegistry react)
-                      "SimpleExampleApp"
-                      #(r/reactify-component root-view)))
+  (doseq [k ["SimpleExampleApp" "main"]]
+    (.registerComponent (.-AppRegistry react)
+                        k
+                        #(r/reactify-component root-view))))
 
 (defn on-js-reload []
   (js/console.log "JS RELOADING")
